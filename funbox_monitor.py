@@ -9,11 +9,8 @@ html = requests.get(
     timeout=30
 ).text
 
-links = sorted(set(
-    re.findall(r'/products/[^"\']+', html)
+models = sorted(set(
+    re.findall(r'(?:BX|UX|CX)-\d+', html)
 ))
 
-print("找到", len(links), "個商品連結\n")
-
-for link in links:
-    print(link)
+print(models)
