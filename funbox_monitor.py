@@ -9,16 +9,13 @@ html = requests.get(
     timeout=30
 ).text
 
-print("script 數量:", html.count("<script"))
-
 matches = re.findall(
     r'<script[^>]*application/ld\+json[^>]*>(.*?)</script>',
     html,
     re.DOTALL
 )
 
-print("JSON-LD 數量:", len(matches))
-
-for i, m in enumerate(matches[:5]):
-    print(f"\n===== JSON {i+1} =====")
-    print(m[:1000])
+if matches:
+    print(matches[0][:5000])
+else:
+    print("找不到 JSON")
