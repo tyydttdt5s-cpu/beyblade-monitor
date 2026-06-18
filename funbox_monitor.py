@@ -33,17 +33,22 @@ def send_line_message(message):
         ]
     }
 
-    r = requests.post(
-        "https://api.line.me/v2/bot/message/push",
-        headers=headers,
-        json=payload,
-        timeout=30
-    )
+    try:
+        r = requests.post(
+            "https://api.line.me/v2/bot/message/push",
+            headers=headers,
+            json=payload,
+            timeout=30
+        )
 
-    print("LINE推播狀態:", r.status_code)
+        print("LINE推播狀態:", r.status_code)
 
-    if r.status_code != 200:
-        print(r.text)
+        if r.status_code != 200:
+            print("LINE錯誤內容:")
+            print(r.text)
+
+    except Exception as e:
+        print("LINE推播失敗:", e)
 
 
 print("目前目錄:", os.getcwd())
@@ -125,3 +130,6 @@ print("\nproducts.json內容：")
 
 with open("products.json", "r", encoding="utf-8") as f:
     print(f.read())
+
+# ===== 測試LINE推播 =====
+send_line_message("🧪 Funbox監控器測試成功")
