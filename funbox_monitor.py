@@ -1,6 +1,7 @@
 import requests
+import json
 
-url = "https://cdn-general.cybassets.com/s/files/11114/theme/33501/assets/js/1670494228_3d183fc4_category.js"
+url = "https://shop.funbox.com.tw/categories.json"
 
 headers = {
     "User-Agent": "Mozilla/5.0"
@@ -10,5 +11,14 @@ r = requests.get(url, headers=headers)
 
 print("狀態碼:", r.status_code)
 
-print("\n===== JS前10000字 =====\n")
-print(r.text[:10000])
+try:
+    data = r.json()
+
+    print("\n===== JSON前3筆 =====\n")
+
+    for item in data[:3]:
+        print(json.dumps(item, ensure_ascii=False, indent=2))
+
+except Exception as e:
+    print("JSON解析失敗:", e)
+    print(r.text[:2000])
