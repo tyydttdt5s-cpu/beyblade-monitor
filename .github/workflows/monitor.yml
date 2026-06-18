@@ -2,6 +2,11 @@ name: Beyblade Monitor
 
 on:
   workflow_dispatch:
+  schedule:
+    - cron: "*/5 * * * *"
+
+permissions:
+  contents: write
 
 jobs:
   monitor:
@@ -23,3 +28,15 @@ jobs:
       - name: Run monitor
         run: |
           python funbox_monitor.py
+
+      - name: Commit products.json
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add products.json
+
+          if ! git diff --cached --quiet; then
+            git commit -m "Update products list"
+            git push
+          fi
