@@ -1,25 +1,11 @@
-name: Beyblade Monitor
+name: Test Workflow
 
 on:
   workflow_dispatch:
 
 jobs:
-  monitor:
+  test:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
-
-      - name: Install packages
-        run: |
-          pip install -r requirements.txt
-
-      - name: Run monitor
-        run: |
-          python funbox_monitor.py
+      - run: echo "Hello Beyblade"
