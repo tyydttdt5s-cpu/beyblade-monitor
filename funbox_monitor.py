@@ -44,7 +44,6 @@ def send_line_message(message):
         print("LINE推播狀態:", r.status_code)
 
         if r.status_code != 200:
-            print("LINE錯誤內容:")
             print(r.text)
 
     except Exception as e:
@@ -58,7 +57,9 @@ print("-" * 50)
 # 抓取頁面
 html = requests.get(
     URL,
-    headers={"User-Agent": "Mozilla/5.0"},
+    headers={
+        "User-Agent": "Mozilla/5.0"
+    },
     timeout=30
 ).text
 
@@ -95,11 +96,18 @@ new_products = current_products - old_products
 print("新品資料:", new_products)
 
 if new_products:
+
     print("\n發現新品：\n")
 
     for link in new_products:
 
         name = products[link]
+
+        # 只通知 BX / UX / CX
+        if not re.search(r"(BX-|UX-|CX-)", name):
+            print("略過非目標商品:", name)
+            continue
+
         full_url = "https://shop.funbox.com.tw" + link
 
         print(name)
@@ -107,7 +115,7 @@ if new_products:
         print("-" * 50)
 
         message = (
-            f"🎉 Funbox新品上架！\n\n"
+            f"🎉 Funbox 發現新品！\n\n"
             f"{name}\n\n"
             f"{full_url}"
         )
@@ -126,10 +134,4 @@ with open("products.json", "w", encoding="utf-8") as f:
         indent=2
     )
 
-print("\nproducts.json內容：")
-
-with open("products.json", "r", encoding="utf-8") as f:
-    print(f.read())
-
-# ===== 測試LINE推播 =====
-send_line_message("🧪 Funbox監控器測試成功")
+print("\nproducts.json 已更新")
