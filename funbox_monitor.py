@@ -1,37 +1,31 @@
 import requests
-import json
 
-url = "https://shop.funbox.com.tw/categories.json"
-
-r = requests.get(url)
-
-data = r.json()
-
-print("===== 搜尋戰鬥陀螺 =====")
-
-text = json.dumps(data, ensure_ascii=False)
-
-keywords = [
-    "戰鬥陀螺",
-    "BEYBLADE",
-    "beyblade",
-    "TAKARATOMY",
-    "TAKARA TOMY"
+urls = [
+    "https://shop.funbox.com.tw/collections/XIKBXA",
+    "https://shop.funbox.com.tw/collections/XIKBXB",
+    "https://shop.funbox.com.tw/collections/XIKBXC",
+    "https://shop.funbox.com.tw/collections/XIKBXD",
+    "https://shop.funbox.com.tw/collections/XIKBXP",
+    "https://shop.funbox.com.tw/collections/KB2X"
 ]
 
-for keyword in keywords:
-    if keyword.lower() in text.lower():
-        print("✅", keyword)
-    else:
-        print("❌", keyword)
+for url in urls:
+    r = requests.get(url, headers={
+        "User-Agent": "Mozilla/5.0"
+    })
 
-print("\n===== 含戰鬥陀螺附近內容 =====\n")
+    print()
+    print("=" * 60)
+    print(url)
+    print("狀態碼:", r.status_code)
 
-idx = text.find("戰鬥陀螺")
+    html = r.text
 
-if idx != -1:
-    start = max(0, idx - 1000)
-    end = idx + 3000
-    print(text[start:end])
-else:
-    print("找不到戰鬥陀螺")
+    if "BX-" in html:
+        print("✅ 發現 BX")
+    if "UX-" in html:
+        print("✅ 發現 UX")
+    if "CX-" in html:
+        print("✅ 發現 CX")
+
+    print("HTML長度:", len(html))
