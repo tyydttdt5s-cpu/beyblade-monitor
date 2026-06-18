@@ -1,4 +1,5 @@
 import requests
+import re
 
 url = "https://shop.funbox.com.tw/products/bbpr09652"
 
@@ -8,20 +9,16 @@ html = requests.get(
     timeout=30
 ).text
 
-print("狀態碼:", 200)
+print("script 數量:", html.count("<script"))
 
-keywords = [
-    "__NEXT_DATA__",
-    "__NUXT__",
-    "product",
-    "variants",
-    "product_id",
-    "graphql",
-    "api"
-]
+matches = re.findall(
+    r'<script[^>]*application/ld\+json[^>]*>(.*?)</script>',
+    html,
+    re.DOTALL
+)
 
-for k in keywords:
-    print(k, "✅" if k in html else "❌")
+print("JSON-LD 數量:", len(matches))
 
-print("\n===== 前3000字 =====\n")
-print(html[:3000])
+for i, m in enumerate(matches[:5]):
+    print(f"\n===== JSON {i+1} =====")
+    print(m[:1000])
