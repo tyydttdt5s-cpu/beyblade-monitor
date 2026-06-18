@@ -5,6 +5,47 @@ import os
 
 URL = "https://shop.funbox.com.tw/collections/戰鬥陀螺"
 
+
+def send_line_message(message):
+    token = os.getenv("LINE_CHANNEL_ACCESS_TOKEN")
+    user_id = os.getenv("LINE_USER_ID")
+
+    if not token:
+        print("❌ 找不到 LINE_CHANNEL_ACCESS_TOKEN")
+        return
+
+    if not user_id:
+        print("❌ 找不到 LINE_USER_ID")
+        return
+
+    headers = {
+        "Content-Type": "application/json",
+        "Authorization": f"Bearer {token}"
+    }
+
+    payload = {
+        "to": user_id,
+        "messages": [
+            {
+                "type": "text",
+                "text": message
+            }
+        ]
+    }
+
+    r = requests.post(
+        "https://api.line.me/v2/bot/message/push",
+        headers=headers,
+        json=payload,
+        timeout=30
+    )
+
+    print("LINE推播狀態:", r.status_code)
+
+    if r.status_code != 200:
+        print(r.text)
+
+
 print("目前目錄:", os.getcwd())
 print("products.json存在:", os.path.exists("products.json"))
 print("-" * 50)
@@ -52,9 +93,22 @@ if new_products:
     print("\n發現新品：\n")
 
     for link in new_products:
-        print(products[link])
-        print("https://shop.funbox.com.tw" + link)
+
+        name = products[link]
+        full_url = "https://shop.funbox.com.tw" + link
+
+        print(name)
+        print(full_url)
         print("-" * 50)
+
+        message = (
+            f"🎉 Funbox新品上架！\n\n"
+            f"{name}\n\n"
+            f"{full_url}"
+        )
+
+        send_line_message(message)
+
 else:
     print("沒有新品")
 
