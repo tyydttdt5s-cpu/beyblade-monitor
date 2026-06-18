@@ -1,4 +1,5 @@
 import requests
+import re
 
 url = "https://shop.funbox.com.tw/categories/takaratomy/beyblade"
 
@@ -8,15 +9,17 @@ html = requests.get(
     timeout=30
 ).text
 
-print("狀態碼:", 200)
+for key in ["KB2X", "UX-", "category", "collection"]:
+    idx = html.find(key)
 
-for key in [
-    "/products/",
-    "BBPR",
-    "KB2X",
-    "UX-",
-    "BX-",
-    "productData",
-    "product"
-]:
-    print(key, html.count(key))
+    print("\n====================")
+    print(key)
+
+    if idx == -1:
+        print("找不到")
+        continue
+
+    start = max(0, idx - 500)
+    end = idx + 1500
+
+    print(html[start:end])
