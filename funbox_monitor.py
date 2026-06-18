@@ -1,25 +1,22 @@
 import requests
-import re
 
-url = "https://shop.funbox.com.tw/categories/takaratomy/beyblade"
+url = "https://shop.funbox.com.tw/collections/戰鬥陀螺"
 
-html = requests.get(
+r = requests.get(
     url,
     headers={"User-Agent":"Mozilla/5.0"},
     timeout=30
-).text
+)
 
-for key in ["KB2X", "UX-", "category", "collection"]:
-    idx = html.find(key)
+print("狀態碼:", r.status_code)
 
-    print("\n====================")
-    print(key)
+html = r.text
 
-    if idx == -1:
-        print("找不到")
-        continue
-
-    start = max(0, idx - 500)
-    end = idx + 1500
-
-    print(html[start:end])
+for key in [
+    "/products/",
+    "BBPR",
+    "UX-",
+    "BX-",
+    "戰鬥陀螺"
+]:
+    print(key, html.count(key))
