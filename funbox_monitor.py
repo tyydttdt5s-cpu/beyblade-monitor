@@ -1,7 +1,6 @@
 import requests
-import re
 
-url = "https://shop.funbox.com.tw/categories/takaratomy/beyblade"
+url = "https://cdn-general.cybassets.com/s/files/11114/theme/33501/assets/js/1670494228_3d183fc4_category.js"
 
 headers = {
     "User-Agent": "Mozilla/5.0"
@@ -9,13 +8,7 @@ headers = {
 
 r = requests.get(url, headers=headers)
 
-html = r.text
-
 print("狀態碼:", r.status_code)
 
-print("\n===== script來源 =====\n")
-
-scripts = re.findall(r'<script[^>]+src=["\']([^"\']+)["\']', html)
-
-for s in scripts:
-    print(s)
+print("\n===== JS前10000字 =====\n")
+print(r.text[:10000])
