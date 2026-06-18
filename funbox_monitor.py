@@ -1,7 +1,6 @@
 import requests
-import re
 
-url = "https://shop.funbox.com.tw/products/bbpr09652"
+url = "https://shop.funbox.com.tw/categories/takaratomy/beyblade"
 
 html = requests.get(
     url,
@@ -9,13 +8,15 @@ html = requests.get(
     timeout=30
 ).text
 
-matches = re.findall(
-    r'var productData = (.*?);',
-    html,
-    re.DOTALL
-)
+print("狀態碼:", 200)
 
-print("找到:", len(matches))
-
-if matches:
-    print(matches[0][:3000])
+for key in [
+    "/products/",
+    "BBPR",
+    "KB2X",
+    "UX-",
+    "BX-",
+    "productData",
+    "product"
+]:
+    print(key, html.count(key))
