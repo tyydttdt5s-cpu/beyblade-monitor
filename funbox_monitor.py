@@ -1,21 +1,22 @@
 import requests
-import re
 
-url = "https://shop.funbox.com.tw/products/bbpr09652"
+url = "https://cdn-general.cybassets.com/frontend/appStoreSDK/main.99d97ccccdb618b576bb.js"
 
-html = requests.get(
+js = requests.get(
     url,
     headers={"User-Agent":"Mozilla/5.0"},
     timeout=30
 ).text
 
-# 抓所有 js 檔
-js_files = re.findall(
-    r'<script[^>]+src="([^"]+\.js[^"]*)"',
-    html
-)
+print("長度:", len(js))
 
-print("JS數量:", len(js_files))
-
-for js in js_files[:50]:
-    print(js)
+for key in [
+    "product",
+    "products",
+    "category",
+    "categories",
+    "search",
+    "graphql",
+    "collection"
+]:
+    print(key, js.count(key))
