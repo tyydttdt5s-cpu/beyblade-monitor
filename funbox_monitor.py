@@ -3,22 +3,35 @@ import json
 
 url = "https://shop.funbox.com.tw/categories.json"
 
-headers = {
-    "User-Agent": "Mozilla/5.0"
-}
+r = requests.get(url)
 
-r = requests.get(url, headers=headers)
+data = r.json()
 
-print("狀態碼:", r.status_code)
+print("===== 搜尋戰鬥陀螺 =====")
 
-try:
-    data = r.json()
+text = json.dumps(data, ensure_ascii=False)
 
-    print("\n===== JSON前3筆 =====\n")
+keywords = [
+    "戰鬥陀螺",
+    "BEYBLADE",
+    "beyblade",
+    "TAKARATOMY",
+    "TAKARA TOMY"
+]
 
-    for item in data[:3]:
-        print(json.dumps(item, ensure_ascii=False, indent=2))
+for keyword in keywords:
+    if keyword.lower() in text.lower():
+        print("✅", keyword)
+    else:
+        print("❌", keyword)
 
-except Exception as e:
-    print("JSON解析失敗:", e)
-    print(r.text[:2000])
+print("\n===== 含戰鬥陀螺附近內容 =====\n")
+
+idx = text.find("戰鬥陀螺")
+
+if idx != -1:
+    start = max(0, idx - 1000)
+    end = idx + 3000
+    print(text[start:end])
+else:
+    print("找不到戰鬥陀螺")
