@@ -41,7 +41,12 @@ else:
 
 current_products = set(products.keys())
 
+print("舊資料:", old_products)
+print("目前資料:", current_products)
+
 new_products = current_products - old_products
+
+print("新品資料:", new_products)
 
 if new_products:
     print("\n發現新品：\n")
@@ -62,7 +67,6 @@ with open("products.json", "w", encoding="utf-8") as f:
         indent=2
     )
 
-# 顯示 products.json 內容
 print("\nproducts.json內容：")
 
 with open("products.json", "r", encoding="utf-8") as f:
