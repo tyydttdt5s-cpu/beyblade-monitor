@@ -1,25 +1,27 @@
 import requests
 
-headers = {
-    "User-Agent": "Mozilla/5.0"
-}
+url = "https://shop.funbox.com.tw/products/bbpr09652"
 
-urls = [
-    "https://shop.funbox.com.tw/products.json",
-    "https://shop.funbox.com.tw/api/products",
-    "https://shop.funbox.com.tw/api/products.json",
-    "https://shop.funbox.com.tw/api/v1/products",
+html = requests.get(
+    url,
+    headers={"User-Agent": "Mozilla/5.0"},
+    timeout=30
+).text
+
+print("狀態碼:", 200)
+
+keywords = [
+    "__NEXT_DATA__",
+    "__NUXT__",
+    "product",
+    "variants",
+    "product_id",
+    "graphql",
+    "api"
 ]
 
-for url in urls:
-    try:
-        r = requests.get(url, headers=headers, timeout=20)
+for k in keywords:
+    print(k, "✅" if k in html else "❌")
 
-        print("\n=================")
-        print(url)
-        print("狀態碼:", r.status_code)
-
-        print(r.text[:500])
-
-    except Exception as e:
-        print(url, e)
+print("\n===== 前3000字 =====\n")
+print(html[:3000])
