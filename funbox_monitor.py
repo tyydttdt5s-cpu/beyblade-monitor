@@ -9,13 +9,25 @@ html = requests.get(
     timeout=30
 ).text
 
-matches = re.findall(
-    r'<script[^>]*application/ld\+json[^>]*>(.*?)</script>',
-    html,
-    re.DOTALL
-)
+patterns = [
+    "68051695",
+    "BBPR09652",
+    "products/",
+    "productId",
+    "api",
+    "graphql"
+]
 
-if matches:
-    print(matches[0][:5000])
-else:
-    print("找不到 JSON")
+for p in patterns:
+    print(f"\n===== {p} =====")
+
+    idx = html.find(p)
+
+    if idx == -1:
+        print("找不到")
+        continue
+
+    start = max(0, idx - 300)
+    end = idx + 1000
+
+    print(html[start:end])
