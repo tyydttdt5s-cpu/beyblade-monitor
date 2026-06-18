@@ -9,22 +9,20 @@ headers = {
 
 r = requests.get(url, headers=headers)
 
-print("狀態碼:", r.status_code)
-
 html = r.text
 
-print("\n===== API相關關鍵字 =====\n")
+print("狀態碼:", r.status_code)
 
-patterns = [
-    "products",
-    "product",
-    "api",
-    "graphql",
-    "json",
-    "__NEXT_DATA__",
-    "category"
-]
+print("\n===== 找出含 api 的內容 =====\n")
 
-for p in patterns:
-    if p.lower() in html.lower():
-        print("✅", p)
+for m in re.finditer(r".{0,150}api.{0,150}", html, re.IGNORECASE):
+    print(m.group())
+    print("-" * 80)
+
+print("\n===== 找出 JSON URL =====\n")
+
+urls = re.findall(r'https?://[^"\']+', html)
+
+for u in urls:
+    if "api" in u.lower() or "json" in u.lower():
+        print(u)
