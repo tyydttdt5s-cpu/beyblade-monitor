@@ -1,22 +1,19 @@
 import requests
+import re
 
 url = "https://shop.funbox.com.tw/collections/戰鬥陀螺"
 
-r = requests.get(
+html = requests.get(
     url,
     headers={"User-Agent":"Mozilla/5.0"},
     timeout=30
-)
+).text
 
-print("狀態碼:", r.status_code)
+links = sorted(set(
+    re.findall(r'/products/[^"\']+', html)
+))
 
-html = r.text
+print("找到", len(links), "個商品連結\n")
 
-for key in [
-    "/products/",
-    "BBPR",
-    "UX-",
-    "BX-",
-    "戰鬥陀螺"
-]:
-    print(key, html.count(key))
+for link in links:
+    print(link)
