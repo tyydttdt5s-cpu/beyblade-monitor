@@ -1,22 +1,21 @@
 import requests
+import re
 
-url = "https://cdn-general.cybassets.com/frontend/appStoreSDK/main.99d97ccccdb618b576bb.js"
+url = "https://shop.funbox.com.tw/products/bbpr09652"
 
-js = requests.get(
+html = requests.get(
     url,
     headers={"User-Agent":"Mozilla/5.0"},
     timeout=30
 ).text
 
-print("長度:", len(js))
+matches = re.findall(
+    r'var productData = (.*?);',
+    html,
+    re.DOTALL
+)
 
-for key in [
-    "product",
-    "products",
-    "category",
-    "categories",
-    "search",
-    "graphql",
-    "collection"
-]:
-    print(key, js.count(key))
+print("找到:", len(matches))
+
+if matches:
+    print(matches[0][:3000])
