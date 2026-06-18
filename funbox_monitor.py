@@ -9,16 +9,21 @@ html = requests.get(
     timeout=30
 ).text
 
-products = re.findall(
+matches = re.findall(
     r'href="(/products/[^"]+)".*?data-name="([^"]+)"',
     html,
     re.S
 )
 
+products = {}
+
+for link, name in matches:
+    products[link] = name
+
 print("商品數量:", len(products))
 print()
 
-for link, name in products:
+for link, name in products.items():
     print(name)
     print(link)
     print("-" * 50)
