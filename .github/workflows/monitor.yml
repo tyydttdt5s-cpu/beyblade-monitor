@@ -20,4 +20,4 @@ jobs:
         run: pip install requests
 
       - name: Run Eslite Test
-        run: python eslite_test.py
+        run: python funbox_monitor.py
