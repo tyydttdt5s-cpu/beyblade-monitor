@@ -15,11 +15,11 @@ response = requests.get(
     timeout=30
 )
 
+html = response.text
+
 print("狀態碼:", response.status_code)
 print("實際網址:", response.url)
-print("頁面長度:", len(response.text))
-
-html = response.text
+print("頁面長度:", len(html))
 
 print("\n===== 搜尋關鍵字 =====")
 
@@ -28,39 +28,71 @@ keywords = [
     "BEYBLADE",
     "BX-",
     "UX-",
-    "CX-"
+    "CX-",
+    "/products/",
+    "product",
+    "products"
 ]
 
 for keyword in keywords:
-    if keyword in html:
-        print(f"✅ {keyword}")
-    else:
-        print(f"❌ {keyword}")
+    count = html.count(keyword)
+    print(f"{keyword}: {count}")
 
-print("\n===== 商品連結測試 =====")
+print("\n===== 搜尋 /products/ =====")
 
-links = re.findall(
-    r'href="(/products/[^"]+)"',
+matches = re.findall(
+    r'/products/[^"\']+',
     html
 )
 
-links = list(set(links))
+matches = list(set(matches))
 
-print("找到商品連結數:", len(links))
+print("找到數量:", len(matches))
 
-for link in links[:20]:
-    print(link)
+for item in matches[:50]:
+    print(item)
 
-print("\n===== HTML前1000字 =====")
-print(html[:1000])
+print("\n===== 搜尋 BX =====")
 
-print("\n===== 搜尋 products =====")
-print("products 出現次數:", html.count("/products/"))
+bx_matches = re.findall(
+    r'BX-\d+',
+    html
+)
 
-index = html.find("/products/")
+bx_matches = list(set(bx_matches))
 
-if index != -1:
-    print("\n===== products附近內容 =====")
-    print(html[index-500:index+1500])
-else:
-    print("找不到 /products/")
+print("BX數量:", len(bx_matches))
+
+for item in sorted(bx_matches):
+    print(item)
+
+print("\n===== 搜尋 UX =====")
+
+ux_matches = re.findall(
+    r'UX-\d+',
+    html
+)
+
+ux_matches = list(set(ux_matches))
+
+print("UX數量:", len(ux_matches))
+
+for item in sorted(ux_matches):
+    print(item)
+
+print("\n===== 搜尋 JSON =====")
+
+json_patterns = [
+    "__NEXT_DATA__",
+    "__NUXT__",
+    "products",
+    "Product",
+    "product",
+    "api"
+]
+
+for p in json_patterns:
+    print(f"{p}: {html.count(p)}")
+
+print("\n===== HTML前3000字 =====")
+print(html[:3000])
