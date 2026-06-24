@@ -51,7 +51,7 @@ print("找到商品連結數:", len(links))
 for link in links[:20]:
     print(link)
 
-printprint("\n===== HTML前1000字 =====")
+print("\n===== HTML前1000字 =====")
 print(html[:1000])
 
 print("\n===== 搜尋 products =====")
