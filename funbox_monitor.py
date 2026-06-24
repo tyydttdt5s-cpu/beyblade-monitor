@@ -51,5 +51,16 @@ print("找到商品連結數:", len(links))
 for link in links[:20]:
     print(link)
 
-print("\n===== HTML前1000字 =====")
+printprint("\n===== HTML前1000字 =====")
 print(html[:1000])
+
+print("\n===== 搜尋 products =====")
+print("products 出現次數:", html.count("/products/"))
+
+index = html.find("/products/")
+
+if index != -1:
+    print("\n===== products附近內容 =====")
+    print(html[index-500:index+1500])
+else:
+    print("找不到 /products/")
