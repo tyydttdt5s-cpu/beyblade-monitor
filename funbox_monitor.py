@@ -3,8 +3,7 @@ import re
 import json
 import os
 
-URL = "https://shop.funbox.com.tw/collections/戰鬥陀螺"
-
+URL = "https://shop.funbox.com.tw/collections/beyblade-x"
 
 def send_line_message(message):
     token = os.getenv("LINE_CHANNEL_ACCESS_TOKEN")
@@ -49,35 +48,44 @@ def send_line_message(message):
     except Exception as e:
         print("LINE推播失敗:", e)
 
-
 print("目前目錄:", os.getcwd())
 print("products.json存在:", os.path.exists("products.json"))
-print("-" * 50)
+print("=" * 50)
 
-# 抓取頁面
-html = requests.get(
+# 抓取網頁
+response = requests.get(
     URL,
     headers={
         "User-Agent": "Mozilla/5.0"
     },
     timeout=30
-).text
+)
 
-# 擷取商品
+html = response.text
+
+print("HTTP狀態碼:", response.status_code)
+print("HTML長度:", len(html))
+print("=" * 50)
+
+# 新增除錯資訊
+print("HTML前3000字:")
+print(html[:3000])
+print("=" * 50)
+
+# 抓商品
 matches = re.findall(
-    r'href="(/products/[^"]+)".*?data-name="([^"]+)"',
+    r'href="(/products/[^"]+)".*?data-name="(.*?)"',
     html,
     re.S
 )
 
-# 去重
 products = {}
 
 for link, name in matches:
     products[link] = name
 
 print("目前商品數:", len(products))
-print("-" * 50)
+print("=" * 50)
 
 # 讀取舊資料
 if os.path.exists("products.json"):
@@ -103,19 +111,18 @@ if new_products:
 
         name = products[link]
 
-        # 只通知 BX / UX / CX
         if not re.search(r"(BX-|UX-|CX-)", name):
-            print("略過非目標商品:", name)
+            print("跳過非相關商品:", name)
             continue
 
-        full_url = "https://shop.funbox.com.tw" + link
+        full_url = f"https://shop.funbox.com.tw{link}"
 
         print(name)
         print(full_url)
         print("-" * 50)
 
         message = (
-            f"🎉 Funbox 發現新品！\n\n"
+            f"🚨 Funbox 發現新品！\n\n"
             f"{name}\n\n"
             f"{full_url}"
         )
