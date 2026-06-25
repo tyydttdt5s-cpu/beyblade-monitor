@@ -8,12 +8,11 @@ html = requests.get(
     timeout=30
 ).text
 
-for keyword in [
-    "collection-products",
-    "product-grid",
-    "products",
-    "ProductGrid",
-    "product-card",
-    "api"
-]:
-    print(keyword, "=>", html.find(keyword))
+index = html.find("api")
+
+print("api 位置:", index)
+
+if index != -1:
+    start = max(0, index - 500)
+    end = index + 1500
+    print(html[start:end])
