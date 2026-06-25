@@ -12,11 +12,9 @@ response = requests.get(
 
 html = response.text
 
-index = html.find("/products/")
+print("實際網址:")
+print(response.url)
 
-print("位置:", index)
-
-if index != -1:
-    start = max(0, index - 300)
-    end = index + 500
-    print(html[start:end])
+print()
+print("標題附近:")
+print(html[:2000])
