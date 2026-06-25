@@ -8,7 +8,4 @@ html = requests.get(
     timeout=30
 ).text
 
-with open("funbox.html", "w", encoding="utf-8") as f:
-    f.write(html)
-
-print("已輸出 funbox.html")
+print(html[:10000])
