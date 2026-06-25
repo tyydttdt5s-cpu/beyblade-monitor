@@ -1,5 +1,4 @@
 import requests
-import re
 
 url = "https://shop.funbox.com.tw/collections/beyblade-x"
 
@@ -13,17 +12,11 @@ response = requests.get(
 
 html = response.text
 
-print("頁面長度:", len(html))
+index = html.find("/products/")
 
-matches = re.findall(
-    r'/products/[a-zA-Z0-9\-_]+',
-    html
-)
+print("位置:", index)
 
-matches = sorted(set(matches))
-
-print("商品數量:", len(matches))
-print()
-
-for item in matches:
-    print(item)
+if index != -1:
+    start = max(0, index - 300)
+    end = index + 500
+    print(html[start:end])
