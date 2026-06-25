@@ -2,19 +2,18 @@ import requests
 
 url = "https://shop.funbox.com.tw/collections/beyblade-x"
 
-response = requests.get(
+html = requests.get(
     url,
-    headers={
-        "User-Agent": "Mozilla/5.0"
-    },
+    headers={"User-Agent": "Mozilla/5.0"},
     timeout=30
-)
+).text
 
-html = response.text
-
-print("實際網址:")
-print(response.url)
-
-print()
-print("標題附近:")
-print(html[:2000])
+for keyword in [
+    "collection-products",
+    "product-grid",
+    "products",
+    "ProductGrid",
+    "product-card",
+    "api"
+]:
+    print(keyword, "=>", html.find(keyword))
