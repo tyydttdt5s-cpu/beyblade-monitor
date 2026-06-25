@@ -13,12 +13,14 @@ response = requests.get(
 
 html = response.text
 
+print("頁面長度:", len(html))
+
 matches = re.findall(
-    r'/products/[^"]+',
+    r'/products/[a-zA-Z0-9\-_]+',
     html
 )
 
-matches = sorted(list(set(matches)))
+matches = sorted(set(matches))
 
 print("商品數量:", len(matches))
 print()
