@@ -5,15 +5,17 @@ url = "https://shop.funbox.com.tw/collections/beyblade-x"
 
 html = requests.get(
     url,
-    headers={"User-Agent": "Mozilla/5.0"},
+    headers={
+        "User-Agent": "Mozilla/5.0"
+    },
     timeout=30
 ).text
 
-apis = re.findall(
+matches = re.findall(
     r'https://[^"\']+',
     html
 )
 
-for api in apis:
-    if "api" in api.lower():
-        print(api)
+for m in matches:
+    if "api" in m.lower():
+        print(m)
