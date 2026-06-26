@@ -5,35 +5,41 @@ url = "https://shop.funbox.com.tw/collections/beyblade-x"
 
 html = requests.get(
     url,
-    headers={"User-Agent":"Mozilla/5.0"},
+    headers={"User-Agent": "Mozilla/5.0"},
     timeout=30
 ).text
 
-js = re.findall(
+js_list = re.findall(
     r'https://cdn\.cybassets\.com[^"\']+\.js',
     html
 )
 
-for j in js:
-    print("="*80)
-    print(j)
+keywords = [
+    "/api/",
+    "search",
+    "product",
+    "products",
+    "graphql"
+]
+
+for js in js_list:
+
+    print("=" * 80)
+    print(js)
 
     text = requests.get(
-        j,
-        headers={"User-Agent":"Mozilla/5.0"},
+        js,
+        headers={"User-Agent": "Mozilla/5.0"},
         timeout=30
     ).text
 
-    for word in [
-        "graphql",
-        "products",
-        "product",
-        "collection",
-        "inventory",
-        "variants",
-        "/api/",
-        "search"
-    ]:
+    lower = text.lower()
 
-        if word in text.lower():
-            print("找到：", word)
+    for key in keywords:
+        pos = lower.find(key.lower())
+
+        if pos != -1:
+            print(f"\n==== {key} ====")
+            start = max(0, pos - 300)
+            end = min(len(text), pos + 500)
+            print(text[start:end])
